@@ -5,6 +5,7 @@ import { ColorPreview } from '../components/ColorPreview'
 import { CopyButton } from '../components/CopyButton'
 import { JsonLd } from '../components/JsonLd'
 import { usePersistedState } from '../hooks/usePersistedState'
+import { useLang, useT, langPath } from '../i18n'
 import {
   type Rgb,
   rgbToHex,
@@ -21,7 +22,6 @@ import {
   parseCmyk,
 } from '../calc'
 
-/** 全色空間の表示用文字列 */
 interface ColorStrings {
   readonly hex: string
   readonly rgb: string
@@ -36,7 +36,6 @@ function rgbToAllStrings(rgb: Rgb): ColorStrings {
   const hsl = rgbToHsl(rgb)
   const hsv = rgbToHsv(rgb)
   const cmyk = rgbToCmyk(rgb)
-
   return {
     hex,
     rgb: `${rgb.r}, ${rgb.g}, ${rgb.b}`,
@@ -50,19 +49,18 @@ function rgbToAllStrings(rgb: Rgb): ColorStrings {
 const DEFAULT_RGB: Rgb = { r: 255, g: 87, b: 51 }
 
 export default function HomePage() {
+  const lang = useLang()
+  const t = useT()
   const [rgb, setRgb] = usePersistedState<Rgb>('home:rgb', DEFAULT_RGB)
   const colors = rgbToAllStrings(rgb)
   const hexForPicker = rgbToHex(rgb)
 
-  // lastColor を更新（他ツールへの引き継ぎ用）
   const updateRgb = useCallback(
     (newRgb: Rgb) => {
       setRgb(newRgb)
       try {
         localStorage.setItem('color-conv:lastColor', rgbToHex(newRgb).replace('#', ''))
-      } catch {
-        // ignore
-      }
+      } catch { /* ignore */ }
     },
     [setRgb],
   )
@@ -75,156 +73,63 @@ export default function HomePage() {
     [updateRgb],
   )
 
-  const handleHexInput = useCallback(
-    (value: string) => {
-      const parsed = parseHex(value)
-      if (parsed) updateRgb(parsed)
-    },
-    [updateRgb],
-  )
+  const handleHexInput = useCallback((v: string) => { const p = parseHex(v); if (p) updateRgb(p) }, [updateRgb])
+  const handleRgbInput = useCallback((v: string) => { const p = parseRgb(v); if (p) updateRgb(p) }, [updateRgb])
+  const handleHslInput = useCallback((v: string) => { const p = parseHsl(v); if (p) updateRgb(hslToRgb(p)) }, [updateRgb])
+  const handleHsvInput = useCallback((v: string) => { const p = parseHsv(v); if (p) updateRgb(hsvToRgb(p)) }, [updateRgb])
+  const handleCmykInput = useCallback((v: string) => { const p = parseCmyk(v); if (p) updateRgb(cmykToRgb(p)) }, [updateRgb])
 
-  const handleRgbInput = useCallback(
-    (value: string) => {
-      const parsed = parseRgb(value)
-      if (parsed) updateRgb(parsed)
-    },
-    [updateRgb],
-  )
-
-  const handleHslInput = useCallback(
-    (value: string) => {
-      const parsed = parseHsl(value)
-      if (parsed) updateRgb(hslToRgb(parsed))
-    },
-    [updateRgb],
-  )
-
-  const handleHsvInput = useCallback(
-    (value: string) => {
-      const parsed = parseHsv(value)
-      if (parsed) updateRgb(hsvToRgb(parsed))
-    },
-    [updateRgb],
-  )
-
-  const handleCmykInput = useCallback(
-    (value: string) => {
-      const parsed = parseCmyk(value)
-      if (parsed) updateRgb(cmykToRgb(parsed))
-    },
-    [updateRgb],
-  )
+  const hexClean = hexForPicker.replace('#', '')
 
   return (
     <>
-      <PageHead
-        title="カラー変換ツール｜HEX・RGB・HSL・CMYK相互変換"
-        description="HEX、RGB、HSL、HSV、CMYKのカラーコードを相互変換。配色生成・グラデーション作成・コントラスト比チェックも。"
-        path="/"
-      />
-      <h1 className="page-title">カラーコード変換</h1>
-      <p className="page-description">
-        HEX・RGB・HSL・HSV・CMYKを相互変換。色を入力すると全形式をリアルタイムで表示します。
-      </p>
+      <PageHead title={t.home.metaTitle} description={t.home.description} path="/" />
+      <h1 className="page-title">{t.home.h1}</h1>
+      <p className="page-description">{t.home.pageDescription}</p>
 
-      {/* カラーピッカー + プレビュー */}
       <div className="card converter-preview">
         <div className="converter-preview__picker">
-          <input
-            type="color"
-            value={hexForPicker}
-            onChange={handlePickerChange}
-            className="converter-picker-input"
-            aria-label="カラーピッカー"
-          />
+          <input type="color" value={hexForPicker} onChange={handlePickerChange} className="converter-picker-input" aria-label={t.home.pickerAria} />
         </div>
         <ColorPreview hex={hexForPicker} size="lg" />
       </div>
 
-      {/* 変換フォーム */}
       <div className="card converter-form">
-        <ColorField
-          label="HEX"
-          value={colors.hex}
-          onChange={handleHexInput}
-          placeholder="#FF5733"
-          copyValue={colors.hex}
-          cssValue={`color: ${colors.hex};`}
-        />
-        <ColorField
-          label="RGB"
-          value={colors.rgb}
-          onChange={handleRgbInput}
-          placeholder="255, 87, 51"
-          copyValue={colors.rgb}
-          cssValue={`color: rgb(${colors.rgb});`}
-        />
-        <ColorField
-          label="HSL"
-          value={colors.hsl}
-          onChange={handleHslInput}
-          placeholder="14, 100, 60"
-          copyValue={colors.hsl}
-          cssValue={`color: ${colors.hslCss};`}
-        />
-        <ColorField
-          label="HSV"
-          value={colors.hsv}
-          onChange={handleHsvInput}
-          placeholder="14, 80, 100"
-          copyValue={colors.hsv}
-          cssValue=""
-        />
-        <ColorField
-          label="CMYK"
-          value={colors.cmyk}
-          onChange={handleCmykInput}
-          placeholder="0, 66, 80, 0"
-          copyValue={colors.cmyk}
-          cssValue=""
-        />
+        <ColorField label="HEX" value={colors.hex} onChange={handleHexInput} placeholder="#FF5733" copyValue={colors.hex} cssValue={`color: ${colors.hex};`} />
+        <ColorField label="RGB" value={colors.rgb} onChange={handleRgbInput} placeholder="255, 87, 51" copyValue={colors.rgb} cssValue={`color: rgb(${colors.rgb});`} />
+        <ColorField label="HSL" value={colors.hsl} onChange={handleHslInput} placeholder="14, 100, 60" copyValue={colors.hsl} cssValue={`color: ${colors.hslCss};`} />
+        <ColorField label="HSV" value={colors.hsv} onChange={handleHsvInput} placeholder="14, 80, 100" copyValue={colors.hsv} cssValue="" />
+        <ColorField label="CMYK" value={colors.cmyk} onChange={handleCmykInput} placeholder="0, 66, 80, 0" copyValue={colors.cmyk} cssValue="" />
       </div>
 
-      {/* 他ツールへのリンク */}
       <div className="card converter-links">
-        <p className="converter-links__label">この色で:</p>
+        <p className="converter-links__label">{t.common.thisColorWith}</p>
         <div className="converter-links__items">
-          <Link to={`/palette?base=${hexForPicker.replace('#', '')}`}>
-            配色を生成
-          </Link>
-          <Link to={`/gradient?from=${hexForPicker.replace('#', '')}`}>
-            グラデーション作成
-          </Link>
-          <Link to={`/contrast?fg=${hexForPicker.replace('#', '')}`}>
-            コントラスト比チェック
-          </Link>
+          <Link to={`${langPath(lang, '/palette')}?base=${hexClean}`}>{t.common.linkPalette}</Link>
+          <Link to={`${langPath(lang, '/gradient')}?from=${hexClean}`}>{t.common.linkGradient}</Link>
+          <Link to={`${langPath(lang, '/contrast')}?fg=${hexClean}`}>{t.common.linkContrast}</Link>
         </div>
       </div>
 
-      {/* SEO補足コンテンツ */}
       <section className="seo-content">
-        <h2>カラーコード変換の使い方</h2>
-        <p>
-          任意の形式でカラーコードを入力すると、他のすべての形式にリアルタイムで変換されます。
-          カラーピッカーで直感的に色を選ぶこともできます。
-          各値の横のコピーボタンで、HEXコードやCSS表記をクリップボードにコピーできます。
-        </p>
-        <h2>対応カラーフォーマット</h2>
+        <h2>{t.home.seoHeading1}</h2>
+        <p>{t.home.seoText1}</p>
+        <h2>{t.home.seoHeading2}</h2>
         <ul>
-          <li><strong>HEX</strong>: Web開発で広く使われる16進数表記（例: #FF5733）</li>
-          <li><strong>RGB</strong>: 赤・緑・青の3原色の組み合わせ（例: 255, 87, 51）</li>
-          <li><strong>HSL</strong>: 色相・彩度・輝度で色を指定（例: 14, 100%, 60%）</li>
-          <li><strong>HSV / HSB</strong>: 色相・彩度・明度で色を指定（例: 14, 80%, 100%）</li>
-          <li><strong>CMYK</strong>: 印刷で使われる4色分解（概算値）</li>
+          <li><strong>HEX</strong>: {t.home.formatHex.split(': ').slice(1).join(': ')}</li>
+          <li><strong>RGB</strong>: {t.home.formatRgb.split(': ').slice(1).join(': ')}</li>
+          <li><strong>HSL</strong>: {t.home.formatHsl.split(': ').slice(1).join(': ')}</li>
+          <li><strong>HSV / HSB</strong>: {t.home.formatHsv.split(': ').slice(1).join(': ')}</li>
+          <li><strong>CMYK</strong>: {t.home.formatCmyk.split(': ').slice(1).join(': ')}</li>
         </ul>
       </section>
 
       <JsonLd data={{
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
-        name: 'カラー変換ツール',
-        description: 'HEX、RGB、HSL、HSV、CMYKのカラーコードを相互変換するツール',
-        url: 'https://color-conv.pages.dev/',
+        name: t.home.jsonLdName,
+        description: t.home.jsonLdDescription,
+        url: `https://color-conv.pages.dev/${lang}/`,
         applicationCategory: 'DesignApplication',
         operatingSystem: 'All',
         offers: { '@type': 'Offer', price: '0' },
@@ -233,7 +138,6 @@ export default function HomePage() {
   )
 }
 
-/** 色フォーム1行 */
 interface ColorFieldProps {
   readonly label: string
   readonly value: string
@@ -247,16 +151,9 @@ function ColorField({ label, value, onChange, placeholder, copyValue, cssValue }
   return (
     <div className="color-field">
       <label className="color-field__label">{label}</label>
-      <input
-        type="text"
-        className="color-field__input"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        spellCheck={false}
-      />
+      <input type="text" className="color-field__input" value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} spellCheck={false} />
       <div className="color-field__actions">
-        <CopyButton text={copyValue} label="値" />
+        <CopyButton text={copyValue} />
         {cssValue && <CopyButton text={cssValue} label="CSS" />}
       </div>
     </div>

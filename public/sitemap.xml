@@ -1,27 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://color-conv.pages.dev/</loc>
+    <loc>https://color-conv.pages.dev/ja/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://color-conv.pages.dev/ja/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://color-conv.pages.dev/en/" />
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://color-conv.pages.dev/palette</loc>
+    <loc>https://color-conv.pages.dev/en/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://color-conv.pages.dev/ja/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://color-conv.pages.dev/en/" />
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://color-conv.pages.dev/ja/palette</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://color-conv.pages.dev/ja/palette" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://color-conv.pages.dev/en/palette" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://color-conv.pages.dev/gradient</loc>
+    <loc>https://color-conv.pages.dev/en/palette</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://color-conv.pages.dev/ja/palette" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://color-conv.pages.dev/en/palette" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://color-conv.pages.dev/contrast</loc>
+    <loc>https://color-conv.pages.dev/ja/gradient</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://color-conv.pages.dev/ja/gradient" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://color-conv.pages.dev/en/gradient" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://color-conv.pages.dev/about</loc>
+    <loc>https://color-conv.pages.dev/en/gradient</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://color-conv.pages.dev/ja/gradient" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://color-conv.pages.dev/en/gradient" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://color-conv.pages.dev/ja/contrast</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://color-conv.pages.dev/ja/contrast" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://color-conv.pages.dev/en/contrast" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://color-conv.pages.dev/en/contrast</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://color-conv.pages.dev/ja/contrast" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://color-conv.pages.dev/en/contrast" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://color-conv.pages.dev/ja/about</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://color-conv.pages.dev/ja/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://color-conv.pages.dev/en/about" />
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://color-conv.pages.dev/en/about</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://color-conv.pages.dev/ja/about" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://color-conv.pages.dev/en/about" />
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

@@ -5,46 +5,34 @@ import { ColorPreview } from '../components/ColorPreview'
 import { CopyButton } from '../components/CopyButton'
 import { JsonLd } from '../components/JsonLd'
 import { usePersistedState } from '../hooks/usePersistedState'
+import { useLang, useT } from '../i18n'
 import {
   type Rgb,
   type PaletteType,
   rgbToHex,
   parseHex,
   generatePalette,
-  PALETTE_LABELS,
 } from '../calc'
 
 const PALETTE_TYPES: readonly PaletteType[] = [
-  'complementary',
-  'analogous',
-  'triadic',
-  'split-complementary',
-  'tetradic',
-  'monochromatic',
+  'complementary', 'analogous', 'triadic', 'split-complementary', 'tetradic', 'monochromatic',
 ]
 
 const DEFAULT_RGB: Rgb = { r: 255, g: 87, b: 51 }
 
 function getInitialRgb(searchParams: URLSearchParams): Rgb {
   const base = searchParams.get('base')
-  if (base) {
-    const parsed = parseHex(base)
-    if (parsed) return parsed
-  }
-  // lastColorから復元を試みる
+  if (base) { const p = parseHex(base); if (p) return p }
   try {
     const last = localStorage.getItem('color-conv:lastColor')
-    if (last) {
-      const parsed = parseHex(last)
-      if (parsed) return parsed
-    }
-  } catch {
-    // ignore
-  }
+    if (last) { const p = parseHex(last); if (p) return p }
+  } catch { /* ignore */ }
   return DEFAULT_RGB
 }
 
 export default function PalettePage() {
+  const lang = useLang()
+  const t = useT()
   const [searchParams] = useSearchParams()
   const [initialRgb] = useState(() => getInitialRgb(searchParams))
   const [rgb, setRgb] = usePersistedState<Rgb>('palette:rgb', initialRgb)
@@ -54,138 +42,83 @@ export default function PalettePage() {
   const palette = useMemo(() => generatePalette(rgb, activeType), [rgb, activeType])
 
   const cssVars = useMemo(
-    () =>
-      palette
-        .map((c, i) => `  --palette-${i + 1}: ${c.hex};`)
-        .join('\n'),
+    () => palette.map((c, i) => `  --palette-${i + 1}: ${c.hex};`).join('\n'),
     [palette],
   )
 
   const handleHexInput = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const parsed = parseHex(e.target.value)
-      if (parsed) setRgb(parsed)
-    },
+    (e: React.ChangeEvent<HTMLInputElement>) => { const p = parseHex(e.target.value); if (p) setRgb(p) },
     [setRgb],
   )
-
   const handlePickerChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const parsed = parseHex(e.target.value)
-      if (parsed) setRgb(parsed)
-    },
+    (e: React.ChangeEvent<HTMLInputElement>) => { const p = parseHex(e.target.value); if (p) setRgb(p) },
     [setRgb],
   )
 
   return (
     <>
-      <PageHead
-        title="配色ジェネレーター"
-        description="ベースカラーから補色・類似色・トライアド・テトラードなど6種類の配色パターンを自動生成。CSS変数としてコピーも可能。"
-        path="/palette"
-      />
-      <h1 className="page-title">配色ジェネレーター</h1>
-      <p className="page-description">
-        ベースカラーから6種類の配色パターンを自動生成します。
-      </p>
+      <PageHead title={t.palette.title} description={t.palette.description} path="/palette" />
+      <h1 className="page-title">{t.palette.h1}</h1>
+      <p className="page-description">{t.palette.pageDescription}</p>
 
-      {/* ベースカラー入力 */}
       <div className="card palette-base">
-        <label className="color-field__label">ベースカラー</label>
+        <label className="color-field__label">{t.palette.baseColor}</label>
         <div className="palette-base__inputs">
-          <input
-            type="color"
-            value={hexValue}
-            onChange={handlePickerChange}
-            className="converter-picker-input palette-base__picker"
-            aria-label="ベースカラーピッカー"
-          />
-          <input
-            type="text"
-            className="color-field__input"
-            value={hexValue}
-            onChange={handleHexInput}
-            placeholder="#FF5733"
-            spellCheck={false}
-          />
+          <input type="color" value={hexValue} onChange={handlePickerChange} className="converter-picker-input palette-base__picker" aria-label={t.palette.baseColorAria} />
+          <input type="text" className="color-field__input" value={hexValue} onChange={handleHexInput} placeholder="#FF5733" spellCheck={false} />
           <ColorPreview hex={hexValue} size="sm" />
         </div>
       </div>
 
-      {/* パターンタブ */}
       <div className="palette-tabs" role="tablist">
         {PALETTE_TYPES.map((type) => (
-          <button
-            key={type}
-            role="tab"
-            type="button"
-            className={`palette-tab${activeType === type ? ' palette-tab--active' : ''}`}
-            aria-selected={activeType === type}
-            onClick={() => setActiveType(type)}
-          >
-            {PALETTE_LABELS[type]}
+          <button key={type} role="tab" type="button" className={`palette-tab${activeType === type ? ' palette-tab--active' : ''}`} aria-selected={activeType === type} onClick={() => setActiveType(type)}>
+            {t.palette.types[type]}
           </button>
         ))}
       </div>
 
-      {/* 配色結果 */}
       <div className="card palette-result">
-        {/* 帯プレビュー */}
         <div className="palette-strip">
           {palette.map((c) => (
-            <div
-              key={`${c.label}-${c.hex}`}
-              className="palette-strip__color"
-              style={{ backgroundColor: c.hex }}
-              title={c.label}
-            />
+            <div key={`${c.roleKey}-${c.hex}`} className="palette-strip__color" style={{ backgroundColor: c.hex }} title={t.palette.roles[c.roleKey]} />
           ))}
         </div>
-
-        {/* 色一覧 */}
         <div className="palette-colors">
           {palette.map((c) => (
-            <div key={`${c.label}-${c.hex}`} className="palette-color-item">
+            <div key={`${c.roleKey}-${c.hex}`} className="palette-color-item">
               <ColorPreview hex={c.hex} size="sm" />
               <div className="palette-color-item__info">
-                <span className="palette-color-item__label">{c.label}</span>
+                <span className="palette-color-item__label">{t.palette.roles[c.roleKey]}</span>
                 <span className="palette-color-item__hex">{c.hex}</span>
-                <span className="palette-color-item__rgb">
-                  {c.rgb.r}, {c.rgb.g}, {c.rgb.b}
-                </span>
+                <span className="palette-color-item__rgb">{c.rgb.r}, {c.rgb.g}, {c.rgb.b}</span>
               </div>
               <CopyButton text={c.hex} label="HEX" />
             </div>
           ))}
         </div>
-
-        {/* CSS変数コピー */}
         <div className="palette-css">
-          <CopyButton text={`:root {\n${cssVars}\n}`} label="CSS変数をコピー" />
+          <CopyButton text={`:root {\n${cssVars}\n}`} label={t.palette.copyVars} />
         </div>
       </div>
 
-      {/* SEO */}
       <section className="seo-content">
-        <h2>配色パターンの種類</h2>
+        <h2>{t.palette.seoHeading}</h2>
         <ul>
-          <li><strong>補色</strong>: 色相環で正反対（180°）の色。強いコントラストを生む</li>
-          <li><strong>類似色</strong>: 色相環で隣り合う色（±30°）。調和のとれた配色</li>
-          <li><strong>トライアド</strong>: 色相環を3等分（120°間隔）。バランスの良い3色</li>
-          <li><strong>スプリット</strong>: 補色の両隣（150°, 210°）。補色よりソフトな印象</li>
-          <li><strong>テトラード</strong>: 色相環を4等分（90°間隔）。豊かな4色パレット</li>
-          <li><strong>モノクロ</strong>: 同一色相で明度・彩度を変化させた配色</li>
+          <li><strong>{t.palette.types.complementary}</strong>: {t.palette.seoComplementary.split(': ').slice(1).join(': ')}</li>
+          <li><strong>{t.palette.types.analogous}</strong>: {t.palette.seoAnalogous.split(': ').slice(1).join(': ')}</li>
+          <li><strong>{t.palette.types.triadic}</strong>: {t.palette.seoTriadic.split(': ').slice(1).join(': ')}</li>
+          <li><strong>{t.palette.types['split-complementary']}</strong>: {t.palette.seoSplit.split(': ').slice(1).join(': ')}</li>
+          <li><strong>{t.palette.types.tetradic}</strong>: {t.palette.seoTetradic.split(': ').slice(1).join(': ')}</li>
+          <li><strong>{t.palette.types.monochromatic}</strong>: {t.palette.seoMono.split(': ').slice(1).join(': ')}</li>
         </ul>
       </section>
 
       <JsonLd data={{
-        '@context': 'https://schema.org',
-        '@type': 'WebApplication',
-        name: '配色ジェネレーター',
-        description: 'ベースカラーから6種類の配色パターンを自動生成するツール',
-        url: 'https://color-conv.pages.dev/palette',
-        applicationCategory: 'DesignApplication',
-        operatingSystem: 'All',
+        '@context': 'https://schema.org', '@type': 'WebApplication',
+        name: t.palette.jsonLdName, description: t.palette.jsonLdDescription,
+        url: `https://color-conv.pages.dev/${lang}/palette`,
+        applicationCategory: 'DesignApplication', operatingSystem: 'All',
         offers: { '@type': 'Offer', price: '0' },
       }} />
     </>
