@@ -1,61 +1,36 @@
 # PLAN.md — color-conv
 
-## Phase 1（初期リリース）
+## Phase 1（初期リリース）✅ 完了
 
-### Step 1: プロジェクト基盤
-- Vite + React 19 + TypeScript セットアップ
-- React Router、ESLint、Vitest 設定
-- Layout（ヘッダー/ナビ/フッター）
-- 共通コンポーネント（コピーボタン、カラープレビュー）
-- usePersistedState フック
-- public/_headers, _redirects, robots.txt
+### Step 1〜7: 基盤 → 色変換エンジン → 4ページ実装 → 公開
+- 全て完了。詳細はTODO.mdを参照。
 
-### Step 2: 色変換エンジン（`src/calc/`）
-- RGB <-> HEX
-- RGB <-> HSL
-- RGB <-> HSV
-- RGB -> CMYK
-- RGB -> Lab（XYZ経由）
-- CIEDE2000 距離計算
-- コントラスト比計算（WCAG 2.1）
-- 全変換関数のユニットテスト
+### 追加改善（Phase 1.5）✅ 完了
+- i18n対応（/ja/, /en/ の2言語）
+- ダークモード（prefers-color-scheme）
+- SSGプリレンダリング（10ルート静的HTML）
+- Suspense位置修正、h1二重問題修正
+- 入力エラーフィードバックUI
 
-### Step 3: カラーコード変換ページ（`/`）
-- 全形式入力フォーム（連動）
-- ネイティブカラーピッカー
-- 色見本プレビュー
-- コピーボタン群（値 + CSS表記）
+## Phase 2（次回着手）
 
-### Step 4: 配色ジェネレーター（`/palette`）
-- ベースカラー入力（URLパラメータ対応）
-- 6パターンのタブ切り替え
-- CSS変数一括コピー
+### 優先度の検討（エージェント会議結果）
+- **和色辞典**: SEO観点で最優先（競合ゼロの独自コンテンツ、ロングテール狙い）
+- **色覚シミュレーション**: UX観点で最優先（コントラストチェッカーからの自然な導線）
+- **独自カラーピッカー**: UX底上げだが緊急度低（ネイティブで動作中）
 
-### Step 5: グラデーション生成（`/gradient`）
-- 2色 + 中間色追加
-- 方向設定（線形/放射状）
-- ステップ数設定
-- CSSコードコピー
+### 技術的注意点（レビュー結果）
+- 色覚シミュレーション: Brettel変換行列はsrc/calc/に純粋関数として実装。画像処理はCanvas API + Worker検討
+- 和色辞典: データはsrc/data/にTS定数。CIEDE2000で最近接色探索（既存calc活用）
+- CSS設計: Phase 2着手前にglobal.cssをページ別に分離検討（現在800行超）
 
-### Step 6: コントラスト比チェッカー（`/contrast`）
-- 前景色/背景色入力
-- WCAG判定表示
-- テキストプレビュー
-- 合格色の提案
-
-### Step 7: SEO・収益化・公開準備
-- 各ページのメタタグ・OGP
-- JSON-LD構造化データ
-- AdSense埋め込み
-- アフィリエイト導線（Canva、Adobe等をA8.netで検討）
-- sitemap.xml
-- GA4設定
-- GitHubリポジトリ作成・Cloudflare Pages連携
-
-## Phase 2
-- 色覚シミュレーション（`/vision`）
-- 和色・慣用色名辞典（`/colors`）
-- 独自カラーピッカー（色相環 + SV パネル）
+### 未着手の改善項目
+- 独自ドメイン取得（SEO基盤。ユーザー操作）
+- A8.netアフィリエイト導線（Canva Pro, Adobe CC）
+- 各ページの解説テキスト充実（300-500字）
+- モバイルUX改善（カラーピッカーサイズ、コピーボタンレイアウト）
+- palette-tabsのaria-labelledby/tabpanel追加
+- CSS Modules移行の検討
 
 ## 現在のフェーズ
-**Phase 1 — Step 7: 公開準備**
+**Phase 1 完了 — Phase 2 未着手**

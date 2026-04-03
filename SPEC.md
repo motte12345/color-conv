@@ -2,11 +2,13 @@
 
 ## サイト概要
 
-- サイト名: カラー変換ツール（仮）
+- サイト名: カラー変換ツール / Color Converter
+- URL: https://color-conv.pages.dev/
 - 目的: 色コードの相互変換と配色生成をブラウザ上で完結させる
 - 収益モデル: AdSense + デザインツール系アフィリエイト（Canva、Adobe等）+ A8.net
-- 技術構成: React 19 + TypeScript + Vite 8
-- デプロイ: Cloudflare Pages + GitHub自動デプロイ
+- 技術構成: React 19 + TypeScript + Vite 8 + 自前i18n
+- 多言語: 日本語（/ja/）+ 英語（/en/）
+- デプロイ: Cloudflare Pages + GitHub自動デプロイ + ビルド時プリレンダリング
 - 外部データ更新不要。色の計算は数学的に確定しているのでメンテナンスフリー
 
 ## フェーズ分け

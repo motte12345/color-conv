@@ -67,7 +67,19 @@
 - [x] hreflangタグ + sitemap二言語化
 - [x] 旧パスの301リダイレクト
 
+### 追加改善（Phase 1.5）
+- [x] Suspense位置修正（Layout外→Outlet内）
+- [x] h1二重問題修正（Layoutのh1をdivに）
+- [x] ダークモード対応（prefers-color-scheme）
+- [x] 入力エラーフィードバックUI
+- [x] SSGプリレンダリング（10ルート静的HTML）
+
 ## Phase 2
-- [ ] 色覚シミュレーション（/vision）
-- [ ] 和色・慣用色名辞典（/colors）
+- [ ] 色覚シミュレーション（/:lang/vision）
+- [ ] 和色・慣用色名辞典（/:lang/colors）
 - [ ] 独自カラーピッカー
+- [ ] 独自ドメイン取得 → SHARED_CONFIG.md更新
+- [ ] A8.netアフィリエイト導線（Canva Pro, Adobe CC）
+- [ ] 各ページの解説テキスト充実（300-500字）
+- [ ] モバイルUX改善（ピッカーサイズ、コピーボタン）
+- [ ] CSS分割（global.css → ページ別）
