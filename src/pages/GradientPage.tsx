@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { PageHead } from '../components/PageHead'
 import { CopyButton } from '../components/CopyButton'
@@ -33,8 +33,8 @@ function getInitialColor(searchParams: URLSearchParams, param: string, fallback:
 
 export default function GradientPage() {
   const [searchParams] = useSearchParams()
-  const initialFrom = useMemo(() => getInitialColor(searchParams, 'from', { r: 255, g: 87, b: 51 }), []) // eslint-disable-line react-hooks/exhaustive-deps
-  const initialTo = useMemo(() => getInitialColor(searchParams, 'to', { r: 51, g: 87, b: 255 }), []) // eslint-disable-line react-hooks/exhaustive-deps
+  const [initialFrom] = useState(() => getInitialColor(searchParams, 'from', { r: 255, g: 87, b: 51 }))
+  const [initialTo] = useState(() => getInitialColor(searchParams, 'to', { r: 51, g: 87, b: 255 }))
 
   const [fromRgb, setFromRgb] = usePersistedState<Rgb>('gradient:from', initialFrom)
   const [toRgb, setToRgb] = usePersistedState<Rgb>('gradient:to', initialTo)

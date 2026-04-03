@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { PageHead } from '../components/PageHead'
 import { CopyButton } from '../components/CopyButton'
@@ -23,8 +23,8 @@ function getInitialColor(searchParams: URLSearchParams, param: string, fallback:
 
 export default function ContrastPage() {
   const [searchParams] = useSearchParams()
-  const initialFg = useMemo(() => getInitialColor(searchParams, 'fg', { r: 51, g: 51, b: 51 }), []) // eslint-disable-line react-hooks/exhaustive-deps
-  const initialBg = useMemo(() => getInitialColor(searchParams, 'bg', { r: 255, g: 255, b: 255 }), []) // eslint-disable-line react-hooks/exhaustive-deps
+  const [initialFg] = useState(() => getInitialColor(searchParams, 'fg', { r: 51, g: 51, b: 51 }))
+  const [initialBg] = useState(() => getInitialColor(searchParams, 'bg', { r: 255, g: 255, b: 255 }))
 
   const [fg, setFg] = usePersistedState<Rgb>('contrast:fg', initialFg)
   const [bg, setBg] = usePersistedState<Rgb>('contrast:bg', initialBg)

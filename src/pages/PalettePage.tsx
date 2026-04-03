@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { PageHead } from '../components/PageHead'
 import { ColorPreview } from '../components/ColorPreview'
@@ -46,7 +46,7 @@ function getInitialRgb(searchParams: URLSearchParams): Rgb {
 
 export default function PalettePage() {
   const [searchParams] = useSearchParams()
-  const initialRgb = useMemo(() => getInitialRgb(searchParams), []) // eslint-disable-line react-hooks/exhaustive-deps
+  const [initialRgb] = useState(() => getInitialRgb(searchParams))
   const [rgb, setRgb] = usePersistedState<Rgb>('palette:rgb', initialRgb)
   const [activeType, setActiveType] = usePersistedState<PaletteType>('palette:type', 'complementary')
 
