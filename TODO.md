@@ -54,9 +54,9 @@
 - [x] AdSense埋め込み（index.htmlに設定済み）
 - [ ] アフィリエイト導線（A8.netで案件選定後）
 - [x] sitemap.xml
-- [x] GA4設定（プレースホルダーID — GA4プロパティ作成後に差し替え）
-- [ ] GitHubリポジトリ作成
-- [ ] Cloudflare Pages連携
+- [x] GA4設定（G-PFRY4H8ERY）
+- [x] GitHubリポジトリ作成（https://github.com/motte12345/color-conv）
+- [x] Cloudflare Pages連携（https://color-conv.pages.dev/）
 - [x] ルートの CLAUDE.md, PLAN.md, SHARED_CONFIG.md 更新
 
 ## Phase 2
