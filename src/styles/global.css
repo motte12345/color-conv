@@ -16,6 +16,36 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
   --max-width: 960px;
+  --wcag-pass-bg: #dcfce7;
+  --wcag-pass-border: #86efac;
+  --wcag-pass-text: #16a34a;
+  --wcag-fail-bg: #fef2f2;
+  --wcag-fail-border: #fca5a5;
+  --wcag-fail-text: #dc2626;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #8B8FE8;
+    --color-primary-light: #2a2b4a;
+    --color-surface: #1e1e2e;
+    --color-background: #14141e;
+    --color-border: #3a3a4a;
+    --color-text: #e4e4e8;
+    --color-text-secondary: #a0a0b0;
+    --color-text-tertiary: #707080;
+    --color-success: #4ade80;
+    --color-error: #f87171;
+    --color-warning: #fbbf24;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+    --wcag-pass-bg: #14532d;
+    --wcag-pass-border: #166534;
+    --wcag-pass-text: #4ade80;
+    --wcag-fail-bg: #450a0a;
+    --wcag-fail-border: #7f1d1d;
+    --wcag-fail-text: #f87171;
+  }
 }
 
 /* ===== Reset ===== */
@@ -321,6 +351,15 @@ a:hover {
   outline: none;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.color-field__input--invalid {
+  border-color: var(--color-error);
+}
+
+.color-field__input--invalid:focus {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
 }
 
 .color-field__actions {
@@ -640,13 +679,13 @@ a:hover {
 }
 
 .wcag-badge--pass {
-  background: #dcfce7;
-  border: 1px solid #86efac;
+  background: var(--wcag-pass-bg);
+  border: 1px solid var(--wcag-pass-border);
 }
 
 .wcag-badge--fail {
-  background: #fef2f2;
-  border: 1px solid #fca5a5;
+  background: var(--wcag-fail-bg);
+  border: 1px solid var(--wcag-fail-border);
 }
 
 .wcag-badge__status {
@@ -656,11 +695,11 @@ a:hover {
 }
 
 .wcag-badge--pass .wcag-badge__status {
-  color: #16a34a;
+  color: var(--wcag-pass-text);
 }
 
 .wcag-badge--fail .wcag-badge__status {
-  color: #dc2626;
+  color: var(--wcag-fail-text);
 }
 
 .wcag-badge__label {

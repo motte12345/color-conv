@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { PageHead } from '../components/PageHead'
 import { ColorPreview } from '../components/ColorPreview'
@@ -148,10 +148,34 @@ interface ColorFieldProps {
 }
 
 function ColorField({ label, value, onChange, placeholder, copyValue, cssValue }: ColorFieldProps) {
+  // keyにvalueを使って親の値変更時にリセット
+  const [editState, setEditState] = useState<{ text: string; invalid: boolean }>({ text: value, invalid: false })
+
+  // 親の値が変わったらリセット（Reactの key ではなく比較で検知）
+  const displayValue = editState.text === value || editState.invalid ? editState.text : value
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const v = e.target.value
+    onChange(v)
+    setEditState({ text: v, invalid: v.length > 2 && v !== value })
+  }, [onChange, value])
+
+  const handleBlur = useCallback(() => {
+    setEditState((prev) => ({ ...prev, invalid: false }))
+  }, [])
+
   return (
     <div className="color-field">
       <label className="color-field__label">{label}</label>
-      <input type="text" className="color-field__input" value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} spellCheck={false} />
+      <input
+        type="text"
+        className={`color-field__input${editState.invalid ? ' color-field__input--invalid' : ''}`}
+        value={displayValue}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        placeholder={placeholder}
+        spellCheck={false}
+      />
       <div className="color-field__actions">
         <CopyButton text={copyValue} />
         {cssValue && <CopyButton text={cssValue} label="CSS" />}

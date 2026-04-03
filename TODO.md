@@ -59,6 +59,14 @@
 - [x] Cloudflare Pages連携（https://color-conv.pages.dev/）
 - [x] ルートの CLAUDE.md, PLAN.md, SHARED_CONFIG.md 更新
 
+### i18n対応
+- [x] 自前の軽量i18n（React Context + 翻訳JSON）
+- [x] /ja/ と /en/ のURLプレフィックス
+- [x] 全5ページの英語翻訳
+- [x] ヘッダーにJA/EN切替
+- [x] hreflangタグ + sitemap二言語化
+- [x] 旧パスの301リダイレクト
+
 ## Phase 2
 - [ ] 色覚シミュレーション（/vision）
 - [ ] 和色・慣用色名辞典（/colors）
